@@ -1,0 +1,16 @@
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+
+# Allow loopback traffic
+-A INPUT -i lo -j ACCEPT
+-A OUTPUT -o lo -j ACCEPT
+
+# Stateful inspection: Allow established and related traffic
+-A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# Allow outbound traffic from private network to public network
+-A FORWARD -i veth-r-priv -o veth-r-pub -j ACCEPT
+
+COMMIT
